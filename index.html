@@ -1,0 +1,50 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=1024" />
+		<title>Xposed</title>
+
+		<meta name="description" content="Xposed presentation" />
+		<meta name="author" content="Yohann LEON" />
+
+
+		<link href="css/xposed.css" rel="stylesheet" />
+		<link href="http://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
+
+	</head>
+
+	<body class="impress-not-supported impress">
+
+		<div class="fallback-message">
+			Your web browser stinks shit
+		</div>
+
+		<div id="impress">
+
+			<div id="one" class="step" data-x="0" data-y="0">
+				<div class="first">ANDROID RUNTIME<br/><span style="font-size: 2em; color: #000;">HACKING</span><br/>WITH XPOSED</div><br/><br/>
+				<div style="font-size: 2em; text-align: -webkit-right;">A TALK BY SHEPARD</div>
+			</div>
+
+			<div id="two" class="step two" data-x="1200" data-y="0">Android est <span class="scale">libre</span> et <span class="scale">ouvert</span> </div>
+
+
+		</div>
+
+		<div class="hint">
+			<p>Use a spacebar or arrow keys to navigate</p>
+		</div>
+
+		<script>
+		if ("ontouchstart" in document.documentElement) { 
+			document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+		}
+		</script>
+
+
+
+		<script src="js/impress.js"></script>
+		<script>impress().init();</script>
+
+	</body>
+</html>
