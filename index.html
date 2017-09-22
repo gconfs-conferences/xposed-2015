@@ -9,6 +9,7 @@
 
 
 		<link href="css/xposed.css" rel="stylesheet" />
+		<link href="css/prettify.css" rel="stylesheet" />
 		<link href="http://fonts.googleapis.com/css?family=Fjalla+One" rel="stylesheet" type="text/css">
 
 	</head>
@@ -26,7 +27,7 @@
 				<div style="font-size: 2em; text-align: -webkit-right;">A TALK BY SHEPARD</div>
 			</div>
 
-			<div id="two" class="step two" data-x="1200" data-y="0">Android est <span class="scale">libre</span> et <span class="scale">ouvert</span> <br/> <span class="appear">Et c'est ce qui fait sa force !</span></div>
+			<div id="two" class="step two" data-x="1200" data-y="0">Android is <span class="scale">free</span> and <span class="scale">open-source</span></div>
 
 			<div id="three" class="step three" data-x="2400" data-y="0">
 				<span class="x">X</span>
@@ -35,11 +36,107 @@
 				<span class="xpos">S</span>
 				<span class="xpose">E</span>
 				<span class="xposed">D</span>
-
-				<div class="appear" style="font-size: 3em; text-align: -webkit-right; color:#1976D2;">SHALL WE BEGIN ?</div>
 			</div>
 
-		</div>
+			<div id="four" class="step four" data-x="3600" data-y="0">
+				<span style="color:#1976D2;">NOW, SHALL WE BEGIN ?</span><br/><br/>
+				XPOSED allows modding without touching any APK<br/>
+				XPOSED has a growing community<br/>
+				XPOSED is open-source
+									
+			</div>
+
+			<div id="five" class="step five" data-x="4800" data-y="0">
+				<img src="img/boot.png" alt="boot_process" style="float: right;"/>
+				<br/><br/><br/>
+				<span style="color:#1976D2;">HOW DOES IT WORKS ?</span>
+			</div>
+
+			<div id="six" class="step six" data-x="6000" data-y="0">
+				<span style="color:#1976D2;">SCOTTY, BEAM US UP</span><br/><br/>
+				<span style="font-size: 28px">Zygote <em>[noun]</em>  : a diploid cell resulting from the fusion of two haploid gametes</span><br/><br/>
+				<span style="font-size: 28px">Zygote is launched by Init.rc through</span>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server</pre><br/>
+				<span style="font-size: 28px">A Dalvik machine with all Java stuffs is instantiated for every app launched</span><br/>
+				<span style="font-size: 28px">What if you could include a custom jar ?</span>
+			</div>
+
+			<div id="seven" class="step seven" data-x="7200" data-y="0">
+				<span style="color:#1976D2;">WHOA, WAIT. DOC !</span><br/><br/>
+				<span style="font-size: 28px">PWNED !</span>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">
+runtime.start(isXposedLoaded ? "de.robv.android.xposed.XposedBridge" : "com.android.internal.os.ZygoteInit",
+	startSystemServer ? "start-system-server" : "");</pre><br/>
+              <span style="font-size: 28px">Now you can hook any function of the Android API</span>
+			</div>
+
+			<div id="eight" class="step eight" data-x="8400" data-y="0">
+				<span style="color:#1976D2;">HOW TO USE IT ?</span><br/><br/>
+				<span style="font-size: 28px">Use the source, Luke !</span><br/><br/>
+				<span style="font-size: 28px">Otherwise, use decompiling tools such as dex2jar, apktool..</span>
+			</div>
+
+			<div id="nine" class="step nine" data-x="9600" data-y="0">
+				<span style="color:#1976D2;">WANNA SEE A MAGIC TRICK ?</span><br/><br/>
+				<span style="font-size: 28px">Handle a process</span><br/>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">
+@Override
+public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+	if (!lpparam.packageName.equals("com.android.systemui"))
+		return;
+
+	XposedBridge.log("We are in SystemUI!");
+}</pre><br/>
+				<span style="font-size: 28px">And hook one method</span><br/>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">
+@Override
+public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
+	if (!lpparam.packageName.equals("com.android.systemui"))
+		return;
+
+	XposedBridge.log("We are in SystemUI!");
+
+	findAndHookMethod("com.android.systemui.class", lpparam.classLoader, "myMethod", new XC_MethodHook() {
+		@Override
+		protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+			// this will be called before the clock was updated by the original method
+		}
+		@Override
+		protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+			// this will be called after the clock was updated by the original method
+		}
+	});
+}</pre>
+			</div>
+
+			<div id="ten" class="step ten" data-x="10800" data-y="0">
+				<span style="color:#1976D2;">BRING IN THE LOGIC PROBE !</span><br/><br/>
+				<span style="font-size: 28px">Get a class</span><br/>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">
+Class<?> edition = XposedHelpers.findClass("com.android.systemui.class", lpparam.classLoader);</pre><br/>
+				<span style="font-size: 28px">Modifying layouts</span><br/>
+				<pre style="font-size: 14px; padding: 10px;" class="prettyprint">
+@Override
+public void handleInitPackageResources(InitPackageResourcesParam resparam) throws Throwable {
+	if (!resparam.packageName.equals("com.android.systemui"))
+		return;
+
+	resparam.res.hookLayout("com.android.systemui", "layout", "status_bar", new XC_LayoutInflated() {
+    	@Override
+		public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+			TextView clock = (TextView) liparam.view.findViewById(liparam.res.
+				getIdentifier("clock", "id", "com.android.systemui"));
+
+			clock.setTextColor(Color.RED);
+		}
+	}); 
+}</pre>
+			</div>
+
+
+			<div id="eleven" class="step eleven" data-x="12000" data-y="0">
+				<img class="questions" src="img/questions.jpg" alt="boot_process"/>
+			</div>					
 
 		<div class="hint">
 			<p>Use a spacebar or arrow keys to navigate</p>
@@ -55,6 +152,7 @@
 
 		<script src="js/impress.js"></script>
 		<script>impress().init();</script>
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 	</body>
 </html>
