@@ -27,7 +27,7 @@ body {
 }
 
 .step {
-	width: 1000px;
+	width: 900px;
 }
 
 .impress-enabled .step {
@@ -100,7 +100,7 @@ body {
 }
 
 .two {
-	font-size: 6em;
+	font-size: 5em;
 	text-align:center;
 }
 
